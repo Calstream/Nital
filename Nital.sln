@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Nital", "Nital\Nital.vcxproj", "{AB8C09E8-74E7-4680-88E0-877B9794A5BB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nital1", "nital1\nital1.vcxproj", "{F2C17444-EE64-44A4-AEA2-26E8B094F3DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AB8C09E8-74E7-4680-88E0-877B9794A5BB}.Debug|x64.ActiveCfg = Debug|x64
-		{AB8C09E8-74E7-4680-88E0-877B9794A5BB}.Debug|x64.Build.0 = Debug|x64
-		{AB8C09E8-74E7-4680-88E0-877B9794A5BB}.Debug|x86.ActiveCfg = Debug|Win32
-		{AB8C09E8-74E7-4680-88E0-877B9794A5BB}.Debug|x86.Build.0 = Debug|Win32
-		{AB8C09E8-74E7-4680-88E0-877B9794A5BB}.Release|x64.ActiveCfg = Release|x64
-		{AB8C09E8-74E7-4680-88E0-877B9794A5BB}.Release|x64.Build.0 = Release|x64
-		{AB8C09E8-74E7-4680-88E0-877B9794A5BB}.Release|x86.ActiveCfg = Release|Win32
-		{AB8C09E8-74E7-4680-88E0-877B9794A5BB}.Release|x86.Build.0 = Release|Win32
+		{F2C17444-EE64-44A4-AEA2-26E8B094F3DE}.Debug|x64.ActiveCfg = Debug|x64
+		{F2C17444-EE64-44A4-AEA2-26E8B094F3DE}.Debug|x64.Build.0 = Debug|x64
+		{F2C17444-EE64-44A4-AEA2-26E8B094F3DE}.Debug|x86.ActiveCfg = Debug|Win32
+		{F2C17444-EE64-44A4-AEA2-26E8B094F3DE}.Debug|x86.Build.0 = Debug|Win32
+		{F2C17444-EE64-44A4-AEA2-26E8B094F3DE}.Release|x64.ActiveCfg = Release|x64
+		{F2C17444-EE64-44A4-AEA2-26E8B094F3DE}.Release|x64.Build.0 = Release|x64
+		{F2C17444-EE64-44A4-AEA2-26E8B094F3DE}.Release|x86.ActiveCfg = Release|Win32
+		{F2C17444-EE64-44A4-AEA2-26E8B094F3DE}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
