@@ -15,8 +15,20 @@ class Graph
 public:
 	int Size;
 	map<char, list<char>> Adj;
-	vector<char> ks;
+	map<char, bool> visited;
+	vector<char> order;
+
 	Graph() : Size(0) {}
+
+	bool check_ham_path()
+	{
+		for (size_t i = 0; i < order.size() - 1; i++)
+		{
+			if (find(Adj[order[i]].begin(), Adj[order[i]].end(), order[i + 1]) == Adj[order[i]].end())
+				return false;
+		}
+		return true;
+	}
 
 	void AddVertex(char v)
 	{
@@ -24,63 +36,45 @@ public:
 		{
 			++Size;
 			Adj.emplace(pair<char, list<char>>(v, *(new list<char>())));
-			ks.push_back(v);
+			visited.emplace(pair<char, bool>(v, false));
 		}
 	}
 
 	void AddEdge(char v1, char v2)
 	{
-		Adj[v1].emplace_back(v2);
+		if (find(Adj[v1].begin(), Adj[v1].end(), v2) == Adj[v1].end())
+			Adj[v1].emplace_back(v2);
 	}
 
-	// A recursive function used by topologicalSort
-	void Graph::topologicalSortUtil(char v, bool visited[],
-		stack<char> &Stack)
+	void Graph::topologicalSortUtil(char v)//, stack<char> &Stack)
 	{
-		// Mark the current node as visited.
 		visited[v] = true;
 
-		// Recur for all the vertices adjacent to this vertex
-		//list<int>::iterator i;
-		for (char x : Adj[v])
-		//for (i = Adj[v].begin(); i != Adj[v].end(); ++i)
-			if (!visited[x])
-				topologicalSortUtil(x, visited, Stack);
+		for (auto i = Adj[v].begin(); i != Adj[v].end(); ++i)
+			if (!visited[*i])
+				topologicalSortUtil(*i);//, Stack);
 
 		// Push current vertex to stack which stores result
-		Stack.push(v);
+			order.push_back(v);
+		//Stack.push(v);
 	}
 
-	// The function to do Topological Sort. It uses recursive 
-	// topologicalSortUtil()
 	void Graph::topologicalSort()
 	{
-		stack<char> Stack;
+		for (auto v: Adj)
+			if (!visited[v.first])
+				topologicalSortUtil(v.first);// , Stack);
 
-		// Mark all the vertices as not visited
-		
-		bool *visited = new bool[Size];
-		for (int i = 0; i < Size; i++)
-			visited[i] = false;
-
-		// Call the recursive helper function to store Topological
-		// Sort starting from all vertices one by one
-		for each (auto x in Adj)
-			if (!visited[x.first])
-				topologicalSortUtil(x.first, visited, Stack);
-		/*for (int j = 0; j < Size; j++)
-			if (visited[j] == false)
-				topologicalSortUtil(j, visited, Stack);*/
 		ofstream output;
-		output.open(oname, ios_base::app);
+		output.open(oname);
 		output.clear();
-		// Print contents of stack
-		while (Stack.empty() == false)
-		{
-			output << Stack.top() << " ";
-			Stack.pop();
-		}
+
+		for (int i = order.size() - 1; i >= 0; --i)
+			output << order[i] << " ";		
 	}
+
+
+	
 
 };
 
@@ -140,7 +134,7 @@ int main()
  	graph.topologicalSort();
 	
 
-	system("pause");
+ 	system("pause");
 }
 
 
@@ -152,3 +146,54 @@ int main()
 //assert(reslt == 5);
 //assert(find_mismatch("abacus", "abacup") == 5);
 //assert(find_mismatch("ab", "acc") == 1);
+
+
+
+/*
+
+// A recursive function used by topologicalSort
+void Graph::topologicalSortUtil(char v, bool visited[],
+stack<char> &Stack)
+{
+// Mark the current node as visited.
+visited[v] = true;
+
+// Recur for all the vertices adjacent to this vertex
+//list<int>::iterator i;
+
+// Push current vertex to stack which stores result
+Stack.push(v);
+}
+
+// The function to do Topological Sort. It uses recursive
+// topologicalSortUtil()
+void Graph::topologicalSort()
+{
+stack<char> Stack;
+
+// Mark all the vertices as not visited
+
+bool *visited = new bool[Size];
+for (int i = 0; i < Size; i++)
+visited[i] = false;
+
+// Call the recursive helper function to store Topological
+// Sort starting from all vertices one by one
+for each (auto x in Adj)
+if (!visited[x.first])
+topologicalSortUtil(x.first, visited, Stack);
+/*for (int j = 0; j < Size; j++)
+if (visited[j] == false)
+topologicalSortUtil(j, visited, Stack);*/
+/*ofstream output;
+output.open(oname, ios_base::app);
+output.clear();
+// Print contents of stack
+while (Stack.empty() == false)
+{
+	output << Stack.top() << " ";
+	Stack.pop();
+}
+	}
+
+*/
