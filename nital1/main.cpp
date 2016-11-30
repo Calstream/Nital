@@ -5,9 +5,10 @@
 #include<list>
 #include<map>
 #include<stack>
+#include<iostream>
 using namespace std;
 
-string const iname = "input1.txt";
+string const iname = "loop.txt";
 string const oname = "output.txt";
 
 class Graph
@@ -17,8 +18,33 @@ public:
 	map<char, list<char>> Adj;
 	map<char, bool> visited;
 	vector<char> order;
+	map<char, int> used;
 
 	Graph() : Size(0) {}
+	
+	/*bool is_DAG()
+	{
+		return is_DAG();
+	}*/
+
+	bool is_DAGutil(char v)
+	{
+		used[v] = 1;
+		for (auto x : Adj[v])
+		{
+			if (used[x] == 0)
+			{
+				if (is_DAGutil(x))
+					return true;
+			}
+			else if (used[x] == 1)
+			{
+				return true;
+			}
+		}
+		used[v] = 2;
+		return false;
+	}
 
 	bool check_ham_path()
 	{
@@ -37,6 +63,7 @@ public:
 			++Size;
 			Adj.emplace(pair<char, list<char>>(v, *(new list<char>())));
 			visited.emplace(pair<char, bool>(v, false));
+			used.emplace(pair<char,int>(v,0));
 		}
 	}
 
@@ -131,8 +158,9 @@ int main()
 		int mm = find_mismatch(dict[i-1], dict[i]);
 		graph.AddEdge(dict[i - 1][mm], dict[i][mm]);
 	}
- 	graph.topologicalSort();
-	
+	if (graph.is_DAGutil(dict[0][0]))
+ 		graph.topologicalSort();
+	else cout << ":)))))))";
 
  	system("pause");
 }
