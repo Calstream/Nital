@@ -84,8 +84,6 @@ struct _edge
 };
 
 
-
-
 class Graph
 {
 public:
@@ -95,14 +93,6 @@ public:
 	vector<_edge> g;
 	vector<bool> visited;
 	Graph(int v, int e) : vert_n(v), edge_n(e) {}
-	//Graph(const Graph & other)
-	//{
-	//	vert_n = other.vert_n;
-	//	edge_n = other.edge_n;
-	//	//g = new vector<_edge>(other.g);
-	//}
-
-	// true если существует ребро из v1 в v2, resedge - результат
 	bool find_edge(int v1, int v2, _edge & resedge)
 	{
 		for (auto x : g)
@@ -118,13 +108,10 @@ public:
 	
 	bool is_Connected()
 	{
-		
 		for (size_t i = 0; i < vert_n; i++)
 		{
 			visited.push_back(false);
 		}
-		//Graph dfse = *this;
-		//visited[g[0].v1 - 1] = true; // start dfs here
 		dfs(g[0],*this);
 
 		for (size_t i = 0; i < vert_n-1; i++)
@@ -133,11 +120,6 @@ public:
 				return false;
 		}
 		return true;
-		/*Mark vertex u as gray(visited).
-			For each edge(u, v), where u is white, run depth - first search for u recursively.
-			Mark vertex u as black and backtrack to the parent.*/
-
-
 	}
 
 	void dfs(_edge e, Graph dfse)
@@ -160,22 +142,10 @@ public:
 			if (v != vv)
 			{
 				bool isEdge = find_edge(vv, v, eres);
-				if (isEdge/* && !visited[v - 1]*/)
+				if (isEdge)
 					dfs(eres, dfse);
 			}
 		}
-		/*int v1 = e.v1;
-		int v2 = e.v2;
-		visited[v1-1] = true;
-		dfse.remove_edge(e);
-		for (int v = 0; v < dfse.vert_n; v++)
-		{
-			_edge eres(-1,-1,-1);
-			bool isEdge = find_edge(v1, v+1, eres);
-			if (isEdge && !visited[v-1])
-				dfs(eres, dfse);
-
-		}*/
 	}
 
 	void AddEdge(int v1, int v2, int w)
@@ -213,19 +183,12 @@ public:
 			int set_v1 = ds.Find(v1-1);
 			int set_v2 = ds.Find(v2-1);
 
-			// Check if the selected edge is creating
-			// a cycle or not (Cycle is created if u
-			// and v belong to same set)
 			if (set_v1 != set_v2)
 			{
-				// Current edge will be in the MST
-				// so print it
 				mst.AddEdge(edge.v1, edge.v2, edge.w);
 
-				// Update MST weight
 				weight += edge.w;
 
-				// Merge two sets
 				ds.Union(set_v1, set_v2);
 			}
 			
@@ -253,17 +216,6 @@ public:
 };
 
 
-//Build first MST
-//L = list of edges in the first mst, sorted by weight
-//second_best_cost = INF
-//for (i = 0; i<L.size; i++) {
-//	try to build a mst without using edge L[i]
-//		if it's possible and its cost is < second_best_cost {
-//			second_mst = the new found mst
-//			second_best_cost = its cost
-//}
-//}
-
 int find_2nd_best(Graph g, Graph mst)
 {
 	mst.sort_edges();
@@ -279,19 +231,13 @@ int find_2nd_best(Graph g, Graph mst)
 			if (nw < sbw)
 				sbw = nw;
 		}
-		
 	}
 	return sbw;
 }
 
 
-
 int main()
 {
-	//int V = 9, E = 14;
-	//Graph g(V, E);
-
-	////vector<string> dict;
 	ifstream input;
 	input.open(iname);
 	string s = "";
@@ -313,64 +259,13 @@ int main()
 	}
 	input.close();
 
-
-	////  making above shown graph
-	//g.AddEdge(0, 1, 4);
-	//g.AddEdge(0, 7, 8);
-	//g.AddEdge(1, 2, 8);
-	//g.AddEdge(1, 7, 11);
-	//g.AddEdge(2, 3, 7);
-	//g.AddEdge(2, 8, 2);
-	//g.AddEdge(2, 5, 4);
-	//g.AddEdge(3, 4, 9);
-	//g.AddEdge(3, 5, 14);
-	//g.AddEdge(4, 5, 10);
-	//g.AddEdge(5, 6, 2);
-	//g.AddEdge(6, 7, 1);
-	//g.AddEdge(6, 8, 6);
-	//g.AddEdge(7, 8, 7);
-
 	Graph mst(0,0);
-
-	//cout << "Edges of MST are \n";
-	//int mst_wt = g1.MST(mst);
-
-	//cout << "\nWeight of MST is " << mst_wt << endl << endl;
-	//mst.print();
-	//cout << "\n 2nd best weight of MST is " << find_2nd_best(g1,mst) << endl << endl;
-	//system("pause");
-
-	Graph g(7, 8);
-	g.AddEdge(1, 2, 1);
-	g.AddEdge(1, 3, 6);
-	g.AddEdge(2, 3, 3);
-	g.AddEdge(2, 4, 12);
-	g.AddEdge(4, 7, 4);
-	g.AddEdge(4, 5, 5);
-	g.AddEdge(5, 6, 2);
-	g.AddEdge(7, 6, 7);
-
 	ofstream output;
 	output.open(oname);
 	output.clear();
 	g1.MST(mst);
 	int t = find_2nd_best(g1, mst);
-	//int t = find_2nd_best(g, mst);
 	output << t;
-	//cout << t;
-	
-	////g.test();
-
-	//cout << g.is_Connected();
-	//	/*1 2 1
-	//	1 3 6
-	//	2 3 3
-	//	2 4 12
-	//	4 7 4
-	//	4 5 5
-	//	5 6 2
-	//	7 6 7*/
-
 
 	system("pause");
 }
