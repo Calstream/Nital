@@ -124,7 +124,7 @@ public:
 			visited.push_back(false);
 		}
 		//Graph dfse = *this;
-		visited[0] = true; // start dfs here
+		//visited[g[0].v1 - 1] = true; // start dfs here
 		dfs(g[0],*this);
 
 		for (size_t i = 0; i < vert_n-1; i++)
@@ -142,18 +142,25 @@ public:
 
 	void dfs(_edge e, Graph dfse)
 	{
+		int v1 = e.v1;
 		int v2 = e.v2;
-		if (visited[e.v2 - 1])
+		if (visited[v2 - 1] && visited[v1 - 1])
 			return;
-		visited[e.v2 - 1] = true;
+		int vv = v1;
+		if (!visited[v2 - 1])
+		{
+			visited[v2 - 1] = true;
+			vv = v2;
+		}
+		else visited[v1 - 1] = true;
 
-		for (int v = 1; v < dfse.vert_n; v++)
+		for (int v = 1; v <= dfse.vert_n; v++)
 		{
 			_edge eres(-1, -1, -1);
-			if (v != v2)
+			if (v != vv)
 			{
-				bool isEdge = find_edge(v2, v, eres);
-				if (isEdge && !(eres == e)/* && !visited[v - 1]*/)
+				bool isEdge = find_edge(vv, v, eres);
+				if (isEdge/* && !visited[v - 1]*/)
 					dfs(eres, dfse);
 			}
 		}
@@ -333,21 +340,25 @@ int main()
 	//cout << "\n 2nd best weight of MST is " << find_2nd_best(g1,mst) << endl << endl;
 	//system("pause");
 
+	Graph g(7, 8);
+	g.AddEdge(1, 2, 1);
+	g.AddEdge(1, 3, 6);
+	g.AddEdge(2, 3, 3);
+	g.AddEdge(2, 4, 12);
+	g.AddEdge(4, 7, 4);
+	g.AddEdge(4, 5, 5);
+	g.AddEdge(5, 6, 2);
+	g.AddEdge(7, 6, 7);
+
 	ofstream output;
 	output.open(oname);
 	output.clear();
+	g1.MST(mst);
 	int t = find_2nd_best(g1, mst);
+	//int t = find_2nd_best(g, mst);
 	output << t;
-
-	//Graph g(7, 8);
-	//g.AddEdge(1, 2, 1);
-	//g.AddEdge(1, 3, 6);
-	//g.AddEdge(2, 3, 3);
-	//g.AddEdge(2, 4, 12);
-	//g.AddEdge(4, 7, 4);
-	//g.AddEdge(4, 5, 5);
-	//g.AddEdge(5, 6, 2);
-	//g.AddEdge(7, 6, 7);
+	//cout << t;
+	
 	////g.test();
 
 	//cout << g.is_Connected();
