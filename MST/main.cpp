@@ -102,6 +102,7 @@ public:
 	//	//g = new vector<_edge>(other.g);
 	//}
 
+	// true если существует ребро из v1 в v2, resedge - результат
 	bool find_edge(int v1, int v2, _edge & resedge)
 	{
 		for (auto x : g)
@@ -122,10 +123,11 @@ public:
 		{
 			visited.push_back(false);
 		}
-		Graph dfse = *this;
-		dfs(g[0],dfse);
+		//Graph dfse = *this;
+		visited[0] = true; // start dfs here
+		dfs(g[0],*this);
 
-		for (size_t i = 0; i < vert_n; i++)
+		for (size_t i = 0; i < vert_n-1; i++)
 		{
 			if (!visited[i])
 				return false;
@@ -140,7 +142,22 @@ public:
 
 	void dfs(_edge e, Graph dfse)
 	{
-		int v1 = e.v1;
+		int v2 = e.v2;
+		if (visited[e.v2 - 1])
+			return;
+		visited[e.v2 - 1] = true;
+
+		for (int v = 1; v < dfse.vert_n; v++)
+		{
+			_edge eres(-1, -1, -1);
+			if (v != v2)
+			{
+				bool isEdge = find_edge(v2, v, eres);
+				if (isEdge && !(eres == e)/* && !visited[v - 1]*/)
+					dfs(eres, dfse);
+			}
+		}
+		/*int v1 = e.v1;
 		int v2 = e.v2;
 		visited[v1-1] = true;
 		dfse.remove_edge(e);
@@ -151,7 +168,7 @@ public:
 			if (isEdge && !visited[v-1])
 				dfs(eres, dfse);
 
-		}
+		}*/
 	}
 
 	void AddEdge(int v1, int v2, int w)
@@ -268,26 +285,26 @@ int main()
 	//Graph g(V, E);
 
 	////vector<string> dict;
-	//ifstream input;
-	//input.open(iname);
-	//string s = "";
-	//int n = 0;
-	//input >> n;
-	//int m = 0;
-	//input >> m;
-	////input.ignore();
-	//Graph g1(n, m);
-	//for (size_t i = 0; i <= m-1; i++)
-	//{
-	//	int v1;
-	//	int v2;
-	//	int w;
-	//	input >> v1;
-	//	input >> v2;
-	//	input >> w;
-	//	g1.AddEdge(v1, v2, w);
-	//}
-	//input.close();
+	ifstream input;
+	input.open(iname);
+	string s = "";
+	int n = 0;
+	input >> n;
+	int m = 0;
+	input >> m;
+	//input.ignore();
+	Graph g1(n, m);
+	for (size_t i = 0; i <= m-1; i++)
+	{
+		int v1;
+		int v2;
+		int w;
+		input >> v1;
+		input >> v2;
+		input >> w;
+		g1.AddEdge(v1, v2, w);
+	}
+	input.close();
 
 
 	////  making above shown graph
@@ -306,7 +323,7 @@ int main()
 	//g.AddEdge(6, 8, 6);
 	//g.AddEdge(7, 8, 7);
 
-	//Graph mst(0,0);
+	Graph mst(0,0);
 
 	//cout << "Edges of MST are \n";
 	//int mst_wt = g1.MST(mst);
@@ -316,32 +333,32 @@ int main()
 	//cout << "\n 2nd best weight of MST is " << find_2nd_best(g1,mst) << endl << endl;
 	//system("pause");
 
-	/*ofstream output;
+	ofstream output;
 	output.open(oname);
 	output.clear();
 	int t = find_2nd_best(g1, mst);
-	output << t;*/
+	output << t;
 
-	Graph g(7, 8);
-	g.AddEdge(1, 2, 1);
-	g.AddEdge(1, 3, 6);
-	g.AddEdge(2, 3, 3);
-	g.AddEdge(2, 4, 12);
-	g.AddEdge(4, 7, 4);
-	g.AddEdge(4, 5, 5);
-	g.AddEdge(5, 6, 2);
-	g.AddEdge(7, 6, 7);
-	//g.test();
+	//Graph g(7, 8);
+	//g.AddEdge(1, 2, 1);
+	//g.AddEdge(1, 3, 6);
+	//g.AddEdge(2, 3, 3);
+	//g.AddEdge(2, 4, 12);
+	//g.AddEdge(4, 7, 4);
+	//g.AddEdge(4, 5, 5);
+	//g.AddEdge(5, 6, 2);
+	//g.AddEdge(7, 6, 7);
+	////g.test();
 
-	cout << g.is_Connected();
-		/*1 2 1
-		1 3 6
-		2 3 3
-		2 4 12
-		4 7 4
-		4 5 5
-		5 6 2
-		7 6 7*/
+	//cout << g.is_Connected();
+	//	/*1 2 1
+	//	1 3 6
+	//	2 3 3
+	//	2 4 12
+	//	4 7 4
+	//	4 5 5
+	//	5 6 2
+	//	7 6 7*/
 
 
 	system("pause");
