@@ -79,7 +79,7 @@ struct _edge
 	_edge(int a, int b, int c) : v1(a), v2(b), w(c) {}
 	bool operator==(_edge const & other)
 	{
-		return (v1 == other.v1) && (v2 == other.v2) && (w == other.w);
+		return (((v1 == other.v1) && (v2 == other.v2)) || ((v1 == other.v2) && (v2 == other.v1))) && (w == other.w);
 	}
 };
 
@@ -106,13 +106,14 @@ public:
 		return false;
 	}
 	
-	bool is_Connected()
+	bool is_Connected(_edge & ignore)
 	{
+		visited.clear();
 		for (size_t i = 0; i < vert_n; i++)
 		{
 			visited.push_back(false);
 		}
-		dfs(g[0],*this);
+		dfs(g[0],*this,ignore);
 
 		for (size_t i = 0; i < vert_n-1; i++)
 		{
@@ -122,7 +123,7 @@ public:
 		return true;
 	}
 
-	void dfs(_edge e, Graph dfse)
+	void dfs(_edge & e, Graph & dfse, _edge & ignore)
 	{
 		int v1 = e.v1;
 		int v2 = e.v2;
@@ -142,8 +143,8 @@ public:
 			if (v != vv)
 			{
 				bool isEdge = find_edge(vv, v, eres);
-				if (isEdge)
-					dfs(eres, dfse);
+				if (isEdge && !(eres == ignore))
+					dfs(eres, dfse, ignore);
 			}
 		}
 	}
@@ -170,28 +171,30 @@ public:
 		sort(g.begin(), g.end(), compare_edges());
 	}
 
-	int MST(Graph & mst)
+	int MST(Graph & mst, _edge & ignore)
 	{
 		int weight = 0;
 		DisjointSets ds(vert_n);
 		sort(g.begin(), g.end(), compare_edges());
 		for (auto edge : g)
 		{
-			int v1 = edge.v1;
-			int v2 = edge.v2;
-
-			int set_v1 = ds.Find(v1-1);
-			int set_v2 = ds.Find(v2-1);
-
-			if (set_v1 != set_v2)
+			if (!(edge == ignore))
 			{
-				mst.AddEdge(edge.v1, edge.v2, edge.w);
+				int v1 = edge.v1;
+				int v2 = edge.v2;
 
-				weight += edge.w;
+				int set_v1 = ds.Find(v1 - 1);
+				int set_v2 = ds.Find(v2 - 1);
 
-				ds.Union(set_v1, set_v2);
+				if (set_v1 != set_v2)
+				{
+					mst.AddEdge(edge.v1, edge.v2, edge.w);
+
+					weight += edge.w;
+
+					ds.Union(set_v1, set_v2);
+				}
 			}
-			
 		}	
 		return weight;
 	}
@@ -216,18 +219,16 @@ public:
 };
 
 
-int find_2nd_best(Graph g, Graph mst)
+int find_2nd_best(Graph & g, Graph & mst)
 {
 	mst.sort_edges();
 	int sbw = INT_MAX;
-	for (auto e : mst.g)
+	for (auto ignore : mst.g)
 	{
-		Graph temp = g;
-		temp.remove_edge(e);
-		if (temp.is_Connected())
+		if (g.is_Connected(ignore))
 		{
 			Graph newmst(0, 0);
-			int nw = temp.MST(newmst);
+			int nw = g.MST(newmst,ignore);
 			if (nw < sbw)
 				sbw = nw;
 		}
@@ -261,11 +262,26 @@ int main()
 
 	Graph mst(0,0);
 	ofstream output;
+	_edge ee(-1, -1, -1);
 	output.open(oname);
 	output.clear();
-	g1.MST(mst);
+	g1.MST(mst,ee);
 	int t = find_2nd_best(g1, mst);
 	output << t;
+
+	/*Graph mst1(0, 0);
+	Graph g(7, 8);
+	g.AddEdge(1, 2, 1);
+	g.AddEdge(1, 3, 6);
+	g.AddEdge(2, 3, 3);
+	g.AddEdge(2, 4, 12);
+	g.AddEdge(4, 7, 4);
+	g.AddEdge(4, 5, 5);
+	g.AddEdge(5, 6, 2);
+	g.AddEdge(7, 6, 7);
+	int mw = g1.MST(mst1, ee);
+	int t1 = find_2nd_best(g1, mst1);
+	cout << t1;*/
 
 	system("pause");
 }
